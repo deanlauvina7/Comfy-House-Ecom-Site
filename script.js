@@ -11,6 +11,9 @@ const productsDOM = document.querySelector('.products-center');
 // Main cart
 let cart = [];
 
+// buttons
+let buttonsDOM = [];
+
 // Getting the products
 class Products {
   async getProducts() {
@@ -52,7 +55,7 @@ class UI {
             <img src=${product.image} alt="product" class="product-img">
             <button class="bag-btn" data-id=${product.id}>
               <i class="fas fa-shopping-cart"></i>
-              Add to bag
+              Add to cart
             </button>
           </div>
           <h3>${product.title}</h3>
@@ -61,17 +64,58 @@ class UI {
     });
     productsDOM.innerHTML = result;
   }
-
+  getBagButtons() {
+    const buttons = [...document.querySelectorAll('.bag-btn')];
+    buttonsDOM = buttons;
+    buttons.forEach(button => {
+      let id = button.dataset.id;
+      let inCart = cart.find(item => item.id === id);
+      if (inCart) {
+        button.innerText = 'In Cart';
+        button.disabled = true;
+      }
+      button.addEventListener('click', (e) => {
+        e.target.innerText = 'In Cart';
+        e.target.disabled = true;
+        // get product from products
+        let cartItem = {
+          ...Storage.getProduct(id),
+          amount: 1
+        };
+        console.log(cartItem);
+        // add product to cart
+        cart = [...cart, cartItem];
+        // save cart in local storage
+        Storage.saveCart(cart);
+        // set cart values 
+        // display cart item
+        // show cart
+      });
+    });
+  }
 }
-
 // local storage
 class Storage {
-
+  static saveProducts(products) {
+    localStorage.setItem('products', JSON.stringify(products));
+  }
+  static getProduct(id) {
+    let products = JSON.parse(localStorage.getItem('products'));
+    return products.find(product => product.id === id);
+  }
+  static saveCart(cart) {
+    localStorage.setItem('cart', JSON.stringify(cart));
+  }
 }
 
 document.addEventListener('DOMContentLoaded', () => {
   const ui = new UI();
   const products = new Products();
   // get all products
-  products.getProducts().then(products => ui.displayProducts(products));
+  products.getProducts().then(products => {
+    ui.displayProducts(products);
+    Storage.saveProducts(products);
+  }).then(() => {
+    ui.getBagButtons();
+  });
 });
