@@ -1,2 +1,2 @@
 # Comfy-House-Ecom-Site
- This is an ecommerce website built with HTML, CSS, and Javasript. Includes a shopping cart
+ This is an ecommerce website built with HTML, CSS, and Javasript. I've also integrated a bit of local storage in this project.

@@ -151,7 +151,7 @@ class UI {
     cartContent.addEventListener('click', (e) => {
       if (e.target.classList.contains('remove-item')) {
         let removeItem = e.target;
-        let id = removeItem.dataset.id;
+        let id = moveItem.dataset.id;
         cartContent.removeChild(removeItem.parentElement.parentElement);
         this.removeItem(id);
       } else if (e.target.classList.contains('fa-chevron-up')) {
